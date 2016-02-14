@@ -1,0 +1,169 @@
+html.body{
+	padding: 0;
+	margin: 0;
+}
+#main-layout{
+	width: 100%;
+	height: 100%;
+}
+#list-layout{
+	height: 85%;
+	overflow: hidden;
+}
+#controller-layout{
+	height: 15%;
+	background-color: #444;
+	opacity: 0.9;
+}
+#tab-list-layout{
+	height: 100%;
+	width: 100%;
+}
+#tab-content-layout{
+	height: 85%;
+	overflow: auto;
+}
+#bg-img-layout{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#menu-layout{
+	height: 15%;
+}
+#mobile-tablist{
+	padding: 0;
+	width: 100%;
+	background-color: transparent;
+}
+.charm-closer{
+	display: none;
+}
+.tabs-split{
+	height: 100%;
+}
+
+
+#album-img{
+	display: none;
+	height: 100%;
+}
+#album-img-blur{
+	display: none;
+	left: 0;
+	position: absolute;
+	width: 100%;
+	/*
+	-webkit-filter: blur(5px);
+	filter: blur(5px);*/
+	z-index: -1;
+}
+.grid.condensed{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.full-height{
+	height: 100%;
+}
+.full-width{
+	width: 100%;
+}
+.controller-button-wrapper{
+	text-align: center;
+	position: relative;
+}
+.controller-button-wrapper button{
+	position: absolute;
+	top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.span-center{
+	margin-left: 10px;
+	margin-top: 10px;
+	height: 80%;
+	width: 80%;
+	text-align: center;
+	border-width: 2px;
+	border-color: #fff;
+	border-style: solid;
+	border-radius: 100%;
+}
+.span-center:before{
+	
+	color: #fff;
+}
+.hidden{
+	display: none;
+}
+/*
+fix .sidebar2 color
+*/
+.sidebar2 li{
+	background-color: #71b1d1;
+}
+.sidebar2 li.active{
+	background-color: #fff;
+}
+.sidebar2 li.none-color{
+	background-color: #fff;
+}
+.sidebar2 li a {
+    background-color: #71b1d1;
+    color: #fff;
+}
+.sidebar2 li.active a {
+    background-color: #fff;
+    color: #323232;
+}
+
+.frames-split,.frames-split .frame{
+	height: 100%;
+}
+.lyc-container{
+	position: relative;
+	overflow: hidden;
+}
+#lrc-content{
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	height: 100%;
+	width: 100%;
+	webkit-transform: translate3d(0,0,0);
+	-moz-transform: translate3d(0,0,0);
+	-ms-transform: translate3d(0,0,0);
+	-o-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
+}
+#lrc-content .lrc{
+	margin-bottom: 10px;
+	color: #f00;
+	height: 15px;
+}
+#lrc-content .current-lrc{
+	font-weight: bold;
+	color: #000;
+}
+.lz-pr{
+	position: relative;
+}
+#progress{
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+}
+.redefineScrollBar{
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-radius: 1000px;
+	display: none;
+}

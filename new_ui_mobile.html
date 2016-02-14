@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<link rel="stylesheet" href="css/metro.min.css" type="text/css" media=""/>
+	<link rel="stylesheet" href="css/metro-icons.min.css" type="text/css" media=""/>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/metro.min.js"></script>
+	<script type="text/javascript" src="js/redefineScroll.js"></script>
+	<script type="text/javascript" src="js/new_ui_mobile.js"></script>
+	<link rel="stylesheet" href="css/new_ui_mobile.css" type="text/css" media=""/>
+	<script type="text/javascript" src="js/music_core.js"></script>
+	<title></title>
+</head>
+<body>
+	<audio id="player" class="player"></audio>
+	<div class="grid condensed" id="main-layout">
+		<div id="bg-img-layout">
+			<img id="album-img">
+			<img id="album-img-blur">
+		</div>
+		<div class="row" id="list-layout">
+			<div id="mobile-tablist" data-role="charm" data-position="left">
+				<div id="tab-list-layout">
+					<ul class="sidebar2 tabs-split">
+						<li class="title none-color">迷の选项</li>
+						<li><a href="#tab_search">搜索</a></li>
+						<li><a href="#tab_list">播放列表</a></li>
+						<li><a href="#tab_playing">正在播放</a></li>
+						<li><a href="#tab_mylist">我的歌单</a></li>
+						<li><a href="#tab_about">关于作者</a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="menu-layout">
+				<ul class="f-menu">
+					<li><a href="#"><span class="mif-menu mif-4x"></span>召唤菜单</a></li>
+				</ul>
+			</div>
+			<div class="cell" id="tab-content-layout">
+				<div class="frames-split">
+					<div class="frame" id="tab_index">
+						<div class="grid condensed">
+							<div class="row cells12">
+								<div class="cell offset1 colspan10">
+									<p>这是一个介绍</p>
+									<p>请点击左边的按钮开始使用</p>
+									<p>欢迎试听 “ハロ/ハワユ+鹿乃” 这个关键字(不要忘记”“+”号)搜索结果的第一首歌，不一样的歌词解析，不一样的感受</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="frame hidden" id="tab_search">
+						<div class="grid condensed" id="tab_search_scroll">
+							<div class="row cells12">
+								<div class="cell offset1 colspan10">
+									<p>这是一个想搜啥就搜啥的搜索框</p>
+									<form id="search-box-form">
+										<div class="input-control text full-size" data-role="input">
+											<input type="text" style="padding-right: 57px;" id="search-box">
+											<button class="button" type="submit"><span class="mif-search"></span></button>
+										</div>
+									</form>
+									<table class="table hovered cell-hovered">
+										<thead>
+											<tr>
+												<th>歌曲名</th>
+												<th>歌手</th>
+											</tr>
+										</thead>
+										<tbody id="search-result">
+											
+										</tbody>
+									</table>
+								    <button class="button search-group-button hidden" id="search-pre">上一页</button>
+								    <button class="button search-group-button disabled hidden" id="page-hint">1/2</button>
+								    <button class="button search-group-button hidden" id="search-next">下一页</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="frame hidden" id="tab_list">
+						<div class="grid condensed" id="tab_list_scroll">
+							<div class="row cells12">
+								<div class="cell offset1 colspan10">
+									<p>这是一个播放列表</p>
+									<table class="table hovered cell-hovered">
+										<thead>
+											<tr>
+												<th>状态</th>
+												<th>歌曲名</th>
+												<th>歌手</th>
+											</tr>
+										</thead>
+										<tbody id="play-list">
+											
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="frame hidden" id="tab_mylist">
+						<div class="grid condensed">
+							<div class="row cells12">
+								<div class="cell offset1 colspan10">
+									<p>这是一个我的歌单</p>
+									<p>暂时是没有这个功能的</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="frame hidden" id="tab_about">
+						<div class="grid condensed">
+							<div class="row cells12">
+								<div class="cell offset1 colspan10">
+									<p>欢迎试听 “ハロ/ハワユ+鹿乃” 这个关键字(不要忘记”“+”号)搜索结果的第一首歌，不一样的歌词解析，不一样的感受</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="frame hidden" id="tab_playing">
+						<div class="grid condensed full-height">
+							<div class="row cells12 full-height">
+								<div class="cell offset1 colspan10 full-height">
+									<div class="lyc-container full-height">
+										<div id="lrc-content">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" id="controller-layout">
+			<div class="cell full-height" >
+				<div class="grid condensed full-height">
+					<div class="row cells12 full-height">
+						<div class="cell colspan2 full-height controller-button-wrapper">
+							<button class="button cycle-button large-button" id="player-next">
+								<span class="mif-next"></span>
+							</button>
+						</div>
+						<div class="cell colspan8 full-height">
+							<div class="grid condensed full-height">
+								<div class="row full-height lz-pr">
+									<div class="cell" id="progress">
+										<div class="progress" id="progress-bar" data-role="progress" data-value="0" data-color="bg-red"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cell colspan2 full-height controller-button-wrapper">
+							<button class="button cycle-button large-button" id="player-pause">
+								<span class="mif-pause"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>
