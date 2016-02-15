@@ -31,7 +31,6 @@ var NJTechOnlineMusic = function(){
 		musicUrl : serverUrl + '',
 		albumUrl : serverUrl + '',
 		lrcUrl : serverUrl + '',
-		StateStack : ['JustLoad'],
 		blockLayoutAction : false,
 		playerList : null,
 		lrcEps : 0.0,
@@ -208,6 +207,7 @@ var NJTechOnlineMusic = function(){
 			});
 			$('#player-next').on('click.playerControlle',function(event){
 				_this.player.pause();
+				_this.removePlayingState();
 				_this.refreshPlayer();
 			});
 			this.playerList.on('click.removeListItem','.music-delete',function(event){
@@ -312,30 +312,46 @@ var NJTechOnlineMusic = function(){
 
 		},
 		cacheMusicRes : function( music_id, res ){
-			//将解析后的歌词缓存
-			$.getJSON( _this.lrcUrl +  'xiami.php',
-				{'action': 'get_lrc','music_id':music_id,'res_url':res.lyric_url},
-				function( data ){
-					if(devMark){
-						console.log(data);
-						console.log(_this.lrcUrl + data.file_name);
-					}
-					$.get( _this.lrcUrl + data.file_name ,function(data){
-						_this.lrcData = _this.parseLrc(data);
-						_this.refreshLrcContent();
-						_this.refreshLrcController();
-					});
-					$.getJSON( _this.albumUrl +  'xiami.php',
-						{'action': 'get_pic','music_id':music_id,'res_url':res.album_pic},
-						function( data ){
-							if(devMark){
-								console.log(data);
-							}
-							_this.albumImg.src = _this.albumUrl + data.file_name;
-							_this.albumImgBlur.src = _this.albumUrl + data.file_name;
-							_this.updateMusicRes();
-					});
-			});
+			var emptyLrc = [{'time' : 23333333, 'content' : '没有歌词'}];
+			if(devMark){
+				console.log(res);
+			}
+			if( res.lyric_url && res.lyric_url.length > 2 ){
+				$.getJSON( _this.lrcUrl +  'xiami.php',
+					{'action': 'get_lrc','music_id':music_id,'res_url':res.lyric_url},
+					function( data ){
+						if(devMark){
+							console.log(data);
+							console.log(_this.lrcUrl + data.file_name);
+						}
+						$.get( _this.lrcUrl + data.file_name ,function(data){
+							_this.lrcData = _this.parseLrc(data);
+							_this.refreshLrcContent();
+							_this.refreshLrcController();
+						});
+				});
+			}
+			else{
+				_this.lrcData = emptyLrc;
+				_this.refreshLrcContent();
+				_this.refreshLrcController();
+			}
+			if( res.album_pic && res.album_pic.length > 2 ){
+				$.getJSON( _this.albumUrl +  'xiami.php',
+					{'action': 'get_pic','music_id':music_id,'res_url':res.album_pic},
+					function( data ){
+						if(devMark){
+							console.log(data);
+						}
+						_this.albumImg.src = _this.albumUrl + data.file_name;
+						_this.albumImgBlur.src = _this.albumUrl + data.file_name;
+						_this.updateMusicRes();
+				});
+			}
+			else{
+				_this.albumImg.src = '';
+				_this.albumImgBlur.src = '';
+			}
 		},
 		changeMusic : function( list_index ){
 			if(this.blockUserPlayAction == false){
