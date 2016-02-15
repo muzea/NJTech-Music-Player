@@ -17,7 +17,6 @@ html.body{
 #tab-list-layout{
 	height: 100%;
 	background-color: #fff;
-	opacity: 0.9;
 }
 #tab-content-layout{
 	height: 100%;
@@ -58,7 +57,7 @@ html.body{
 #visualizer{
 	position: absolute;
 	left: 0;
-	top: 0;
+	top: 2px;
 	z-index: -2;
 }
 .grid.condensed{

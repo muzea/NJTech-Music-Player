@@ -32,8 +32,8 @@ var NJTechOnlineMusic = function(){
 		musicUrl : serverUrl + '',
 		albumUrl : serverUrl + '',
 		lrcUrl : serverUrl + '',
-		blockLayoutAction : false,
 		playerList : null,
+		myList : null,
 		lrcEps : 0.0,
 		lrcData : null,
 		lrcContent : null,
@@ -46,7 +46,7 @@ var NJTechOnlineMusic = function(){
 		searchKey : null,
 		searchPage : null,
 		player : null,
-		useVisualizer : false,
+		useVisualizer : true,
 		nowPlayingID : 0,
 		progressBar : null,
 		loopTable : ['列表循环','单曲循环','顺序播放'],
@@ -56,7 +56,9 @@ var NJTechOnlineMusic = function(){
 		_this : null,
 		playIndex : 0,
 		playCnt : 0,
+		playAtom : 0,
 		blockUserPlayAction : false,
+		userPauseMark : false,
 		mobile_ini_mark : false,
 
 		ini : function(){
@@ -65,28 +67,33 @@ var NJTechOnlineMusic = function(){
 			this.player = document.getElementById("player");
 			_this = this;
 			this.player.oncanplay = function(){
+				_this.playAtom = 0;
+				console.log('in oncanplay ' + _this.playAtom);
 				this.play();
 			};
 			this.player.onended = function(){
 				_this.removePlayingState();
+				console.log('in onended ' + _this.playAtom);
 				_this.refreshPlayer();
 			};
 			this.searchResult = $('#search-result');
 			this.playerList = $('#play-list');
+			this.myList = $('#my-list');
 			this.searchForm = $('#search-box-form');
 			this.searchBox = $('#search-box');
 			this.lrcContent = $('#lrc-content');
 			this.albumImg = document.getElementById("album-img");
 			this.albumImgBlur = document.getElementById("album-img-blur");
-			this.progressBar = $('#progress-bar').data('progress');
+			this.progressBar = $('#progress-bar');
 			this.lrcController = {};
 			this.lrcController.currentPos = {};
-			this.lrcController.prefix = 1.0;
+			this.lrcController.prefix = 0.5;
 			this.lrcController.getLrcMoveRange = function( PlayerTime ){
 				//生命不息 萝莉控不止
 				//欢迎试听  "ハロ/ハワユ+鹿乃" 第一个结果 萝莉即是正义！！！
 				var ret = {};
 				if(_this.nowPlayingID == 1769987950){
+					var dup_prefix = 1.0;
 					ret.needChange = false;
 					if(this.currentTime == -1){
 						ret.begin = 0;
@@ -98,7 +105,7 @@ var NJTechOnlineMusic = function(){
 						++ ret.begin;
 					}
 					if ( ret.begin == lrcLength ) return ret;
-					if( ( _this.lrcData[ret.begin].time - this.prefix ) <= PlayerTime ){
+					if( ( _this.lrcData[ret.begin].time - dup_prefix ) <= PlayerTime ){
 						ret.needChange = true;
 					}
 					ret.end = ret.begin + 1;
@@ -167,11 +174,15 @@ var NJTechOnlineMusic = function(){
 					'artist' : p.data('music-artist')
 				};
 				if( typeof(songData.id) != "undefined" && _this.blockUserPlayAction == false){
+					console.log('in music-nowplay' );
+					console.log(songData);
 					_this.blockUserPlayAction = true;
 					_this.addToList(songData);
-					_this.playIndex = _this.playCnt;
+					_this.removePlayingState();
+					_this.playIndex = _this.playCnt - 1;
 					_this.blockUserPlayAction = false;
-					_this.changeMusic(_this.playIndex);
+					_this.player.pause();
+					_this.refreshPlayer();
 				}
 				return false;
 			});
@@ -223,6 +234,35 @@ var NJTechOnlineMusic = function(){
 					_this.deleteMusic(music_id);
 				}
 			});
+			this.playerList.on('click.palyControl','.music-nowplay',function(event){
+				_this.blockUserPlayAction = true;
+				var index = _this.playerList.children().index( $(this).parent() );
+				console.log('in playerList music nowplay ' + index);
+				_this.player.pause();
+				_this.removePlayingState();
+				_this.playIndex = index;
+				_this.blockUserPlayAction = false;
+				_this.refreshPlayer();
+			});
+			$('#mylist-store').on('click.myList',function(event){
+				var songDataList = [];
+				_this.playerList.children().each(function(index,element){
+					songDataList.push($(element).data('songData'));
+				});
+				window.localStorage['songDataList'] = JSON.stringify(songDataList);
+				_this.refreshMyMusicList();
+			});
+			$('#mylist-restore').on('click.myList',function(event){
+				_this.clearMusicList();
+				var songDataList = window.localStorage['songDataList'];
+				if(songDataList){
+					songDataList = JSON.parse(songDataList);
+					songDataList.forEach(function(songData){
+						_this.addToList(songData);
+					});
+				}
+			});
+			this.refreshMyMusicList();
 			if(this.mobile_ini_mark) this.mobile_ini();
 			if(this.useVisualizer && !this.mobile_ini_mark) this.visualizer_ini();
 		},
@@ -304,6 +344,7 @@ var NJTechOnlineMusic = function(){
 		},
 		//controller function begin
 		changeMusicSrc : function( music_src ){
+			this.playAtom = 1;
 			this.player.src = 'mp3/'+music_src;
 		},
 		removePlayingState : function(){
@@ -361,7 +402,6 @@ var NJTechOnlineMusic = function(){
 				musicItem.find('.music-state').find('span').addClass('mif-music');
 				var music_id = musicItem.data('music-id');
 				$.getJSON( this.musicUrl + 'xiami.php?action=get_music&music_id='+music_id,function(data){
-					_this.blockUserPlayAction = false;
 					_this.nowPlayingID = music_id;
 					if(data.state == true){
 						_this.cacheMusicRes(music_id, data);
@@ -369,6 +409,7 @@ var NJTechOnlineMusic = function(){
 							console.log(data);
 						}
 						_this.changeMusicSrc(music_id+'.mp3');
+						_this.blockUserPlayAction = false;
 					}else{
 						console.log('some Error');
 						console.log(data);
@@ -380,6 +421,7 @@ var NJTechOnlineMusic = function(){
 						if(devMark){
 							console.log('播放时移除操作前' + _this.blockUserPlayAction);
 						}
+						_this.blockUserPlayAction = false;
 						_this.deleteMusic(music_id);
 						_this.refreshPlayer();
 						// refreshPlayer -> changeMusic ->  refreshPlayer
@@ -392,7 +434,7 @@ var NJTechOnlineMusic = function(){
 			}
 		},
 		refreshPlayer : function(){
-			if(this.blockUserPlayAction == false && this.player.paused){
+			if(this.blockUserPlayAction == false && this.player.paused && this.playAtom == 0){
 				if(devMark){
 					console.log('debug @ refreshPlayer before switch');
 				}
@@ -454,7 +496,7 @@ var NJTechOnlineMusic = function(){
 			this.lrcController.currentPos.begin = -1;
 			this.lrcController.currentPos.end = -1;
 			$(this.player).on('timeupdate.scroll',function(eventObject){
-				$('#progress-bar').data('progress').set( (this.currentTime  / this.duration) * 100  );
+				_this.progressBar.data('progress').set( (this.currentTime  / this.duration) * 100  );
 				var moveRange = _this.lrcController.getLrcMoveRange( this.currentTime );
 				if(moveRange.needChange == true){
 					if(devMark){
@@ -536,7 +578,17 @@ var NJTechOnlineMusic = function(){
 		//lrc function end
 		//music_list function begin
 		clearMusicList : function(){
-			
+			this.blockUserPlayAction = true;
+			this.player.pause();
+			this.playerList.children().each(function(index, element){
+				if(devMark){
+					console.log( element.dataset['musicId'] );
+				}
+				_this.deleteMusic( element.dataset['musicId'] );
+			});
+			this.progressBar.data('progress').set(0);
+			this.cacheMusicRes(0,{});
+			this.blockUserPlayAction = false;
 		},
 		deleteMusic : function(id){
 			this.blockUserPlayAction = true;
@@ -578,15 +630,18 @@ var NJTechOnlineMusic = function(){
 		addToList : function(songData){
 			if( $('#music-' + songData.id).length == 0 ){
 				var listItem = '<tr class="list-song" id="music-' + songData.id + '" data-music-id="'+songData.id+'" >\
-								<td class="music-state"><span></span></td>\
-								<td class="music-name">'+songData.name+'</td>\
-								<td class="music-artist">'+songData.artist+'</td>\
-								<td data-music-id="'+songData.id+'" class="music-nowplay">立即播放</td>\
-								<td class="music-delete">从列表中删除</td>\
-							</tr>';
+									<td class="music-state"><span></span></td>\
+									<td class="music-name">'+songData.name+'</td>\
+									<td class="music-artist">'+songData.artist+'</td>\
+									<td data-music-id="'+songData.id+'" class="music-nowplay">立即播放</td>\
+									<td class="music-delete">从列表中删除</td>\
+								</tr>';
 				this.playerList.append(listItem);
+				$('#music-' + songData.id).data('songData', songData);
 				this.playCnt++;
-				console.log('debug @ addToList before refreshPlayer');
+				if(devMark){
+					console.log('debug @ addToList before refreshPlayer');
+				}
 				this.refreshPlayer();
 			}else{
 				$.Notify({
@@ -640,11 +695,19 @@ var NJTechOnlineMusic = function(){
 				}
 			});
 		},
-		storeMusicList : function(){
-			
-		},
-		restoreMusicList : function(){
-			
+		refreshMyMusicList : function(){
+			var songDataList = window.localStorage['songDataList'];
+			if(songDataList){
+				songDataList = JSON.parse(songDataList);
+				var content = '';
+				songDataList.forEach(function(songData){
+					content += '<tr>';
+					content += '<td>' + songData.name + '</td>';
+					content += '<td>' + songData.artist + '</td>';
+					content += '</tr>';
+				});
+				this.myList.empty().append(content);
+			}
 		}
 		//music_list function end
 	};

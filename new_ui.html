@@ -100,12 +100,23 @@
 						</div>
 					</div>
 					<div class="frame hidden" id="tab_mylist">
-						<div class="grid condensed">
+						<div class="grid condensed" id="tab_mylist_scroll">
 							<div class="row cells12">
 								<div class="cell offset1 colspan10">
-
 									<p>这是一个我的歌单</p>
-									<p>暂时是没有这个功能的</p>
+									<table class="table hovered cell-hovered">
+										<thead>
+											<tr>
+												<th>歌曲名</th>
+												<th>歌手</th>
+											</tr>
+										</thead>
+										<tbody id="my-list">
+											
+										</tbody>
+									</table>
+									<button class="button" id="mylist-store">保存当前播放列表到我的歌单</button>
+								    <button class="button" id="mylist-restore">用我的歌单替换当前播放列表</button>
 								</div>
 							</div>
 						</div>

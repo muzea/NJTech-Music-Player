@@ -13,4 +13,5 @@ $(function(){
 	});
 	$('#tab_list_scroll').redefineScroll().bind();
 	$('#tab_search_scroll').redefineScroll().bind();
+	$('#tab_mylist_scroll').redefineScroll().bind();
 })
