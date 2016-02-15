@@ -138,6 +138,7 @@ fix .sidebar2 color
 	width: 100%;
 }
 #lrc-content .lrc{
+	margin-top: 10px;
 	margin-bottom: 10px;
 	color: #999;
 	height: 15px;

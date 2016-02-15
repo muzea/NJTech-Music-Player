@@ -25,7 +25,8 @@ $(function(){
 	document.music.ini();
 });
 var NJTechOnlineMusic = function(){
-	var serverUrl =  '/music/';
+	var serverUrl =  '/music/',
+		lrcHeight_half = 12.5;
 	return {
 		searchUrl : serverUrl + '',
 		musicUrl : serverUrl + '',
@@ -145,7 +146,7 @@ var NJTechOnlineMusic = function(){
 					cache_lrc.slice(this.currentPos.begin,this.currentPos.end).removeClass('current-lrc');
 				}
 				cache_lrc.slice(range.begin,range.end).addClass('current-lrc');
-				var mid = Math.floor( ( cache_lrc.eq(range.begin).position().top + cache_lrc.eq(range.end).position().top ) / 2 );
+				var mid = Math.floor( ( range.begin + range.end ) * lrcHeight_half );
 				if(devMark){
 					console.log('移动距离为'+ mid);
 				}
