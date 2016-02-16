@@ -1,6 +1,3 @@
-//整理逻辑部分代码 桌面与移动端共享该部分代码
-//移除 layout 相关代码 @ 2016/01/29
-//移除 界面动画代码 @ 2016/01/30
 //可视化部分使用了 http://www.cnblogs.com/Wayou/p/html5_audio_api_visualizer.html 这里的代码
 var devMark = false;
 var isIE = /*@cc_on!@*/false;
@@ -68,12 +65,10 @@ var NJTechOnlineMusic = function(){
 			_this = this;
 			this.player.oncanplay = function(){
 				_this.playAtom = 0;
-				console.log('in oncanplay ' + _this.playAtom);
 				this.play();
 			};
 			this.player.onended = function(){
 				_this.removePlayingState();
-				console.log('in onended ' + _this.playAtom);
 				_this.refreshPlayer();
 			};
 			this.searchResult = $('#search-result');
@@ -174,8 +169,7 @@ var NJTechOnlineMusic = function(){
 					'artist' : p.data('music-artist')
 				};
 				if( typeof(songData.id) != "undefined" && _this.blockUserPlayAction == false){
-					console.log('in music-nowplay' );
-					console.log(songData);
+					_this.userPauseMark = false;
 					_this.blockUserPlayAction = true;
 					_this.addToList(songData);
 					_this.removePlayingState();
@@ -210,9 +204,11 @@ var NJTechOnlineMusic = function(){
 			var cache_button_play = $('#player-pause');
 			cache_button_play.on('click.playerControlle',function(event){
 				if(_this.player.paused){
+					_this.userPauseMark = false;
 					_this.player.play();
 					cache_button_play.find('span').removeClass('mif-play').addClass('mif-pause');
 				}else{
+					_this.userPauseMark = true;
 					_this.player.pause();
 					cache_button_play.find('span').removeClass('mif-pause').addClass('mif-play');
 				}
@@ -220,6 +216,7 @@ var NJTechOnlineMusic = function(){
 			$('#player-next').on('click.playerControlle',function(event){
 				_this.player.pause();
 				_this.removePlayingState();
+				_this.userPauseMark = false;
 				_this.refreshPlayer();
 			});
 			this.playerList.on('click.removeListItem','.music-delete',function(event){
@@ -235,9 +232,9 @@ var NJTechOnlineMusic = function(){
 				}
 			});
 			this.playerList.on('click.palyControl','.music-nowplay',function(event){
+				_this.userPauseMark = false;
 				_this.blockUserPlayAction = true;
 				var index = _this.playerList.children().index( $(this).parent() );
-				console.log('in playerList music nowplay ' + index);
 				_this.player.pause();
 				_this.removePlayingState();
 				_this.playIndex = index;
@@ -344,8 +341,13 @@ var NJTechOnlineMusic = function(){
 		},
 		//controller function begin
 		changeMusicSrc : function( music_src ){
-			this.playAtom = 1;
-			this.player.src = 'mp3/'+music_src;
+			if(music_src){
+				this.playAtom = 1;
+				this.player.src = 'mp3/'+music_src;				
+			}
+			else{
+				this.player.src = '';
+			}
 		},
 		removePlayingState : function(){
 			this.playerList.find('tr').eq(this.playIndex - 1).find('.music-state').find('span').removeClass('mif-music');
@@ -353,7 +355,7 @@ var NJTechOnlineMusic = function(){
 		updateMusicRes : function( res ){
 
 		},
-		cacheMusicRes : function( music_id, res ){
+		cacheMusicRes : function( music_id, res, reset ){
 			var emptyLrc = [{'time' : 23333333, 'content' : '没有歌词'}];
 			if(devMark){
 				console.log(res);
@@ -376,7 +378,7 @@ var NJTechOnlineMusic = function(){
 			else{
 				_this.lrcData = emptyLrc;
 				_this.refreshLrcContent();
-				_this.refreshLrcController();
+				_this.refreshLrcController(reset);
 			}
 			if( res.album_pic && res.album_pic.length > 2 ){
 				$.getJSON( _this.albumUrl +  'xiami.php',
@@ -453,7 +455,7 @@ var NJTechOnlineMusic = function(){
 								this.changeMusic(this.playIndex - 1);
 							}
 							else{
-								//待补全
+								this.clearPlayerRes();
 								this.blockUserPlayAction = false;
 							}
 						}
@@ -464,7 +466,7 @@ var NJTechOnlineMusic = function(){
 							this.player.play();
 						}
 						else{
-							//待补全
+							this.clearPlayerRes();
 							this.blockUserPlayAction = false;
 						}
 						break;
@@ -482,6 +484,11 @@ var NJTechOnlineMusic = function(){
 				}
 			}
 		},
+		clearPlayerRes : function(){
+			this.cacheMusicRes(0,{},true);
+			this.progressBar.data('progress').set(0);
+			this.changeMusicSrc();
+		},
 		//lrc function begin
 		refreshLrcContent : function(){
 			var content = '';
@@ -490,26 +497,32 @@ var NJTechOnlineMusic = function(){
 			});
 			this.lrcContent.empty().append(content);
 		},
-		refreshLrcController : function(){
+		refreshLrcController : function(reset){
 			$(this.player).off('timeupdate.scroll');
 			this.lrcController.currentTime = -1;
 			this.lrcController.currentPos.begin = -1;
 			this.lrcController.currentPos.end = -1;
-			$(this.player).on('timeupdate.scroll',function(eventObject){
-				_this.progressBar.data('progress').set( (this.currentTime  / this.duration) * 100  );
-				var moveRange = _this.lrcController.getLrcMoveRange( this.currentTime );
-				if(moveRange.needChange == true){
-					if(devMark){
-						console.log(moveRange);
-						console.log(eventObject);
-					}
-					_this.lrcController.setCurrentLrc(moveRange);
+			if(reset && reset === true){
+				//我的内心是崩溃的 我应该重写这里的
+			}
+			else{
+				$(this.player).on('timeupdate.scroll',function(eventObject){
+					_this.progressBar.data('progress').set( (this.currentTime  / this.duration) * 100  );
+					var moveRange = _this.lrcController.getLrcMoveRange( this.currentTime );
+					if(moveRange.needChange == true){
+						if(devMark){
+							console.log(moveRange);
+							console.log(eventObject);
+						}
+						_this.lrcController.setCurrentLrc(moveRange);
 
-					_this.lrcController.currentTime = this.currentTime;
-					_this.lrcController.currentPos.begin = moveRange.begin;
-					_this.lrcController.currentPos.end = moveRange.end;
-				}
-			});
+						_this.lrcController.currentTime = this.currentTime;
+						_this.lrcController.currentPos.begin = moveRange.begin;
+						_this.lrcController.currentPos.end = moveRange.end;
+					}
+				});				
+			}
+
 		},
 		parseLrc : function( raw_data ){
 			var lrcList = [];
@@ -642,7 +655,7 @@ var NJTechOnlineMusic = function(){
 				if(devMark){
 					console.log('debug @ addToList before refreshPlayer');
 				}
-				this.refreshPlayer();
+				if(!this.userPauseMark) this.refreshPlayer();
 			}else{
 				$.Notify({
 					caption: '重复的歌曲',

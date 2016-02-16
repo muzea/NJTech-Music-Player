@@ -43,6 +43,16 @@ if ( $action == 'getlist' )
 
 function getSearchResult ( $key, $page = 1)
 {
+	//为了某些会多打空格的智障儿童
+	$keyarray = explode (' ' , $key );
+	$r_keyarray = array();
+	foreach( $keyarray as $key_item )
+	{
+		if( strlen($key_item) > 0 ){
+			$r_keyarray []= $key_item;
+		}
+	}
+	$key = implode('+', $r_keyarray);
 	$key = urlencode($key);
 	if ( isset($_GET['raw']) )
 	{
