@@ -48,7 +48,7 @@ jQuery.fn.extend({
 						barHeight = Math.floor( containerHeight * containerHeight / height );
 						if( containerHeight >  height ) return false;
 					}
-					if(event.originalEvent.wheelDelta > 0){
+					if(event.originalEvent.deltaY < 0){
 						//向上翻滚
 						if(position > 0){
 							if( position % config.speed ){
