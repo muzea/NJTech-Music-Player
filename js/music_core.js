@@ -200,7 +200,6 @@ var NJTechOnlineMusic = function(){
 				this.innerHTML = _this.loopTable[_this.loopIndex];
 				return false;
 			});
-			this.loopButton = $('#listClearButton');
 			var cache_button_play = $('#player-pause');
 			cache_button_play.on('click.playerControlle',function(event){
 				if(_this.player.paused){
@@ -305,9 +304,6 @@ var NJTechOnlineMusic = function(){
 			function renderFrame() {
 				var array = new Uint8Array(analyser.frequencyBinCount);
 				analyser.getByteFrequencyData(array);
-				if(devMark){
-					console.log('hz length ' + array.length);
-				}
 				var step = Math.floor(array.length / meterNum); //sample limited data from the total array
 				ctx.clearRect(0, 0, cwidth, cheight);
 				for (var i = 0; i < meterNum; i++) {
@@ -463,7 +459,12 @@ var NJTechOnlineMusic = function(){
 					case 1://单曲循环
 						if(this.playCnt && this.playIndex <= this.playCnt){
 							this.blockUserPlayAction = false;
-							this.player.play();
+							if(this.playIndex == 0){
+								this.changeMusic(this.playIndex - 1);
+							}
+							else{
+								this.player.play();
+							}
 						}
 						else{
 							this.clearPlayerRes();
