@@ -515,14 +515,12 @@ var NJTechOnlineMusic = function(){
 							console.log(eventObject);
 						}
 						_this.lrcController.setCurrentLrc(moveRange);
-
 						_this.lrcController.currentTime = this.currentTime;
 						_this.lrcController.currentPos.begin = moveRange.begin;
 						_this.lrcController.currentPos.end = moveRange.end;
 					}
 				});				
 			}
-
 		},
 		parseLrc : function( raw_data ){
 			var lrcList = [];

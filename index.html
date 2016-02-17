@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<script type="text/javascript">
+		var isIE = '\v'=='v';
+		if(isIE){
+			window.location.href = 'iele8.html';
+		}
+		var judgeJump = function() {
+			var jump = window.localStorage['jump'],
+				url  = window.localStorage['url'];
+			if('true' == jump){
+				window.location.href = url;
+			}
+		};
+		judgeJump();
+	</script>
+	<meta charset="UTF-8">
+	<meta name="theme-color" content="#66CCFF">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<link rel="stylesheet" href="css/metro.min.css" type="text/css" media=""/>
+	<title>NJTechOnline Music Player</title>
+	<style type="text/css">
+		*{
+			font-family: "微软雅黑" ,Arial, "MS Trebuchet", sans-serif;
+		}
+		del{
+			font-weight: 100;
+			font-size: .7em;
+		}
+		.grid.condensed{
+			margin: 0;
+			position: relative;
+		}
+		.lz-pr{
+			position: relative;
+		}
+		.lz-fh{
+			height: 100%;
+		}
+		.lz-mt{
+			margin-top: 60px;
+		}
+		#top{
+			color: #fff;
+			padding-top: 100px;
+			background-color: #7cc1de;
+			height: 800px;
+		}
+		#top h3{
+			font-size: 50px;
+			margin-bottom: 10px;
+		}
+		#top h4{
+			font-size: 46px;
+		}
+		#top #screenshot{
+			position: absolute;
+			width: 800px;
+			left: 0;
+			right: 0;
+			margin-left: auto;
+			margin-right: auto;
+			bottom: 0;
+		}
+		#w8{
+			margin-left: 10%;
+			width: 80%;
+		}
+		@media screen and (max-width:480px){
+			#top{
+				padding-top: 20px;
+				height: 600px;
+			}
+			#top #screenshot,#w8{
+				margin-left: 5%;
+				width: 90%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="grid condensed" id="top">
+		<div class="row lz-fh">
+			<div class="cell lz-pr lz-fh align-center">
+				<h3 class="align-center">NJTechOnline Music Player</h3>
+				<h4 class="align-center">一个简单易用的播放器</h4>
+				<div>
+					<button class="button large-button" id="go-mobile">移动版</button>
+					<button class="button large-button" id="go-desktop">桌面版</button>
+				</div>
+				<label class="input-control checkbox small-check">
+					<input type="checkbox" id="remember-choice">
+					<span class="check"></span>
+					<span class="caption">记住我的选择</span>
+				</label>
+				<img id="screenshot" src="Screenshot.png" alt="Screenshot" />
+			</div>
+		</div>
+	</div>
+	<div class="grid condensed">
+		<div class="row">
+			<div class="cell" id="w8">
+				<h2 class="lz-mt"><b>IE8及以下用户可以关掉这个网页了</b></h2>
+				<hr class="bg-blue">
+				<div>
+					<p>我们需要IE9及以上的浏览器才可以正常运行</p>
+				</div>
+				<h2  class="lz-mt"><b>关于我的歌单</b></h2>
+				<hr class="bg-blue">
+				<div>
+					<p>这只是一个简单的实现，使用你保存的数据来替换掉你现在的播放列表，当你的播放列表里面有歌曲时，它会依次删除掉里面的歌曲，所以你会看到很多删除的提示</p>
+					<p><b>并不会提供设备间同步的功能</b></p>
+				</div>
+				<h2  class="lz-mt"><b>Q&A</b></h2>
+				<hr class="bg-blue">
+				<div>
+					<dl>
+						<dt class="before-fg-blue">为什么我的手机无法播放歌曲？</dt>
+						<dd>大部分移动端浏览器会阻止歌曲的自动加载，需要你点击暂停/开始按钮来开始加载歌曲，这个操作在每次打开时都需要进行，或者使用chrome这种浏览器</dd>
+					</dl>
+					<dl>
+						<dt class="before-fg-blue">桌面版与移动版有什么区别</dt>
+						<dd>移动版没有可视化效果与封面图，因为手机/平板的性能太弱会卡<del>当然，也可能是欠缺优化</del></dd>
+					</dl>
+					<dl>
+						<dt class="before-fg-blue">为什么有的歌曲没有/无法播放/封面不对/没有歌词？</dt>
+						<dd>资源抓取的虾米，虾米没有我也没有</del></dd>
+					</dl>
+					<dl>
+						<dt class="before-fg-blue">为什么有的不能控制进度？</dt>
+						<dd>为了让你完整的听完一首歌</del></dd>
+					</dl>
+					<dl>
+						<dt class="before-fg-blue">为什么我的iPad/iPod/iPhone显示/播放不正常？</dt>
+						<dd>因为我没有iPad/iPod/iPhone，无法进行测试<del>模拟器的行为与真机不同，我已经踩过很多坑了</del></dd>
+					</dl>
+				</div>
+				<h2  class="lz-mt"><b>禁止以下操作</b><del>都是刷新可以解决的</del></h2>
+				<hr class="bg-blue">
+				<div>
+					<ul class="simple-list large-bullet">
+						<li>没有歌曲正在播放的时候反复点击暂停/开始</li>
+						<li>疯狂点击某些按钮</li>
+					</ul>
+				</div>
+				<h2 class="lz-mt"><b>可以看一下源码/参与开发吗？</b></h2>
+				<hr class="bg-blue">
+				<div>
+					<p>可以</p>
+					<p>代码放在了 <a target="_blank" href="//git.njtechmars.com">Mars - GitLab</a> 上面</p>
+					<p>因为并不开放注册，所以请发邮件到 <a href="mailto:mr.mu@outlook.com">mr.mu@outlook.com</a> </p>
+				</div>
+				<h2  class="lz-mt"><b>这个东西似乎没啥亮点啊</b></h2>
+				<hr class="bg-blue">
+				<div>
+					<p>有的</p>
+					<p>免流量</p>
+				</div>
+			</div>
+		</div>		
+	</div>
+	<footer class="footer">
+		<div class="grid">
+			<div class="row cells12">
+				<div class="cell colspan8 offset2">
+					<p class="text-muted">&copy; Copyright 2016 by Mars Studio.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+		var prefix = '/music/';
+		var storeChoice = function( url ){
+			var val = document.getElementById('remember-choice').checked;
+			if( true === val ){
+				window.localStorage['jump'] = true;
+				window.localStorage['url'] = url;
+			}
+			else{
+				window.localStorage['jump'] = false;
+			}
+		};
+		document.getElementById('go-desktop').onclick = function(event){
+			var url = prefix + 'new_ui.html';
+			storeChoice(url);
+			window.location.href = url;
+		};
+		document.getElementById('go-mobile').onclick = function(event){
+			var url = prefix + 'new_ui_mobile.html';
+			storeChoice(url);
+			window.location.href = url;
+		};		
+	};
+</script>
+</html>
