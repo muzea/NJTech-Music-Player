@@ -460,6 +460,7 @@ var NJTechOnlineMusic = function(){
 						if(this.playCnt && this.playIndex <= this.playCnt){
 							this.blockUserPlayAction = false;
 							if(this.playIndex == 0){
+								this.playIndex = 1;
 								this.changeMusic(this.playIndex - 1);
 							}
 							else{
