@@ -17,6 +17,9 @@ html.body{
 	background-color: #444;
 	opacity: 0.9;
 }
+.sidebar2{
+	max-width: none;
+}
 .grid.condensed{
 	margin-top: 0;
 	margin-bottom: 0;
