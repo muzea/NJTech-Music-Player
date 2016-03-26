@@ -80,6 +80,9 @@ fix .sidebar2 color
     background-color: #fff;
     color: #323232;
 }
+.fix_dt dt{
+	line-height: 44px;
+}
 .frames-split{
 	position: relative;
 }

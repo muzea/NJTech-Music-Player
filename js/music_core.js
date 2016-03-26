@@ -258,6 +258,9 @@ var NJTechOnlineMusic = function(){
 					});
 				}
 			});
+			$('#volume').on('change',function(e){
+				_this.player.volume = this.value / 100;
+			});
 			this.refreshMyMusicList();
 			if(this.mobile_ini_mark) this.mobile_ini();
 			if(this.useVisualizer && !this.mobile_ini_mark) this.visualizer_ini();
