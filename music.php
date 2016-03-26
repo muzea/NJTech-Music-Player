@@ -14,12 +14,7 @@ else
 if ( $action == 'getlist' )
 {
 	header("Content-type: text/html; charset=utf-8");
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "http://www.xiami.com/chart/data?c=4");
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	$output = curl_exec($ch);
-	curl_close($ch);
+	$output = get_list_data($_GET['cat']);
 	$output = str_replace(PHP_EOL, '', $output);
 	if ( stristr($output,'您要找的是不是') )
 	{
@@ -59,13 +54,7 @@ function getSearchResult ( $key, $page = 1)
 		echo $key;
 	}
 	$searchUrl = "http://www.xiami.com/search/song/page/$page?key=$key&category=-1";
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $searchUrl);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	$output = curl_exec($ch);
-	curl_close($ch);
-	$output = str_replace(PHP_EOL, '', $output);
+	$output = str_replace(PHP_EOL, '', get_data($searchUrl) );
 	$ret = [];
 	$ret['erroe'] = 0;
 	$ret['page'] = $page;
@@ -108,4 +97,30 @@ function getSearchResult ( $key, $page = 1)
 		$ret['music'] = $music_list;
 	}
 	return $ret;
+}
+
+
+function get_data ( $url )
+{
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	$output = curl_exec($ch);
+	curl_close($ch);
+	return $output;
+}
+function get_list_data ( $cat )
+{
+	return get_data( 'http://www.xiami.com/chart/data?c='. map_cat($cat));
+}
+function map_cat( $cat )
+{
+	switch ( $cat )
+	{
+		default : case 'Oricon':case 'oricon':
+			return 5;
+		case 'Billboard':case 'billboard':
+			return 4;
+	}
 }

@@ -25,7 +25,7 @@ var NJTechOnlineMusic = function(){
 	var serverUrl =  '/music/',
 		lrcHeight_half = 12.5;
 	return {
-		searchUrl : serverUrl + '',
+		searchUrl : serverUrl + 'music.php',
 		musicUrl : serverUrl + '',
 		albumUrl : serverUrl + '',
 		lrcUrl : serverUrl + '',
@@ -260,6 +260,21 @@ var NJTechOnlineMusic = function(){
 			});
 			$('#volume').on('change',function(e){
 				_this.player.volume = this.value / 100;
+			});
+			$('.get-music-list').on('click', function(e){
+				$.getJSON(_this.searchUrl,
+						{action:'getlist', cat:$(this).data('cat') },
+						function(data){
+							var len = data.id.length;
+							for( var i = 0; i <len; ++i){
+								var songData = {};
+								songData.id = data.id[i];
+								songData.name = data.name[i];
+								songData.artist = data.artist[i];
+								_this.addToList(songData);
+							}
+						}
+				);
 			});
 			this.refreshMyMusicList();
 			if(this.mobile_ini_mark) this.mobile_ini();
@@ -670,7 +685,7 @@ var NJTechOnlineMusic = function(){
 		getSearchResult : function(key, page){
 			this.searchKey = key;
 			this.searchPage = page;
-			$.getJSON(this.searchUrl + 'music.php?action=search&key='+key + '&page=' + page, function(data){
+			$.getJSON(this.searchUrl + '?action=search&key='+key + '&page=' + page, function(data){
 				if(devMark){
 					console.log(data);
 				}
