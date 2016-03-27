@@ -34,7 +34,30 @@ if ( $action == 'getlist' )
 	}
 	echo json_encode($arr,JSON_UNESCAPED_UNICODE);
 }
-
+if ( $action == 'getlistbytag' )
+{
+	header("Content-type: text/html; charset=utf-8");
+	$tag = $_GET['tag'];
+	$output = get_list_data_by_tag( $tag );
+	$output = str_replace(PHP_EOL, '', $output);
+	if ( stristr($output,'您要找的是不是') )
+	{
+		$arr['errorcode'] = 'NULL';
+	}
+	else
+	{
+		$reg = '/<tr.*?>.*?checked="checked".*?<td class="song_name">.*?<a.*?song\/(.*?)".*?title.*?>(.*?)<\/a>.*?<\/tr>/';
+		preg_match_all( $reg, $output, $matchs );
+		foreach ($matchs[2] as $key=>$value)
+		{
+			$matchs[2][$key] = strip_tags($matchs[2][$key]);
+		}
+		$arr['name'] = $matchs[2];
+		$arr['id'] = $matchs[1];
+		$arr['artist'] = urldecode($tag);
+	}
+	echo json_encode($arr,JSON_UNESCAPED_UNICODE);
+}
 
 function getSearchResult ( $key, $page = 1)
 {
@@ -113,6 +136,11 @@ function get_data ( $url )
 function get_list_data ( $cat )
 {
 	return get_data( 'http://www.xiami.com/chart/data?c='. map_cat($cat));
+}
+function get_list_data_by_tag ( $tag )
+{
+	$tag = urlencode($tag);
+	return get_data( 'http://www.xiami.com/song/tag/'. $tag);
 }
 function map_cat( $cat )
 {

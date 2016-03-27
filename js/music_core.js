@@ -263,7 +263,7 @@ var NJTechOnlineMusic = function(){
 			});
 			$('.get-music-list').on('click', function(e){
 				$.getJSON(_this.searchUrl,
-						{action:'getlist', cat:$(this).data('cat') },
+						{action:'getlistbytag', cat:$(this).data('cat') },
 						function(data){
 							var len = data.id.length;
 							for( var i = 0; i <len; ++i){
@@ -271,6 +271,25 @@ var NJTechOnlineMusic = function(){
 								songData.id = data.id[i];
 								songData.name = data.name[i];
 								songData.artist = data.artist[i];
+								_this.addToList(songData);
+							}
+						}
+				);
+			});
+			$('.get-music-list-by-tag').on('click', function(e){
+				var _tag = $(this).data('tag');
+				while( _tag == 'ud' || _tag.length == 0){
+					_tag = prompt("请输入标签名");
+				}
+				$.getJSON(_this.searchUrl,
+						{action:'getlistbytag', tag:_tag },
+						function(data){
+							var len = data.id.length;
+							for( var i = 0; i <len; ++i){
+								var songData = {};
+								songData.id = data.id[i];
+								songData.name = data.name[i];
+								songData.artist = data.artist;
 								_this.addToList(songData);
 							}
 						}
