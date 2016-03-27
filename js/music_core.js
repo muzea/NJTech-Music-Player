@@ -263,7 +263,7 @@ var NJTechOnlineMusic = function(){
 			});
 			$('.get-music-list').on('click', function(e){
 				$.getJSON(_this.searchUrl,
-						{action:'getlistbytag', cat:$(this).data('cat') },
+						{action:'getlist', cat:$(this).data('cat') },
 						function(data){
 							var len = data.id.length;
 							for( var i = 0; i <len; ++i){
