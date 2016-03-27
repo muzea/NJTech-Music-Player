@@ -370,7 +370,7 @@ var NJTechOnlineMusic = function(){
 
 		},
 		cacheMusicRes : function( music_id, res, reset ){
-			var emptyLrc = [{'time' : 23333333, 'content' : '没有歌词'}];
+			var emptyLrc = [{'time' : 0, 'content' : '没有歌词'}];
 			if(devMark){
 				console.log(res);
 			}
