@@ -46,7 +46,7 @@ if ( $action == 'getlistbytag' )
 	}
 	else
 	{
-		$reg = '/<tr.*?>.*?checked="checked".*?<td class="song_name">.*?<a.*?song\/(.*?)".*?title.*?>(.*?)<\/a>.*?<\/tr>/';
+		$reg = '/<tr.*?>.*?<td class="song_name">.*?<a.*?song\/(.*?)".*?title.*?>(.*?)<\/a>.*?<\/tr>/';
 		preg_match_all( $reg, $output, $matchs );
 		foreach ($matchs[2] as $key=>$value)
 		{
