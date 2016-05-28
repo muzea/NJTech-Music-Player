@@ -8,6 +8,15 @@ switch ( $action )
 	case 'get_music':
 		{
 			$music_id = $_GET['music_id'];
+			if ( $music_id == 'girigiri.love' )
+			{
+				$ret['lyric_url'] = 'girigiri.love';
+				$ret['album_pic'] = 'girigiri.love';
+				$ret['file_name'] = 'mp3/girigiri.love.mp3';
+				$ret['state'] = true;
+				break;
+			}
+			
 			$content=file_get_contents('http://www.xiami.com/song/playlist/id/'.$music_id.'/object_name/default/object_id/0/cat/json');
 			$json = json_decode($content,true);
 			$location = $json['data']['trackList'][0]['location'];
@@ -29,6 +38,12 @@ switch ( $action )
 		{
 			$res_url = $_GET['res_url'];
 			$music_id = $_GET['music_id'];
+			if ( $music_id == 'girigiri.love' )
+			{
+				$ret['file_name'] = 'lrc/girigiri.love.lrc';
+				$ret['state'] = true;
+				break;
+			}
 			$filename = 'lrc/' . $music_id.'.lrc';
 			$ret['file_name'] = $filename;
 			if ( !file_exists($filename) )
@@ -44,6 +59,12 @@ switch ( $action )
 		{
 			$res_url = $_GET['res_url'];
 			$music_id = $_GET['music_id'];
+			if ( $music_id == 'girigiri.love' )
+			{
+				$ret['file_name'] = 'album/girigiri.love.jpg';
+				$ret['state'] = true;
+				break;
+			}
 			$filename = 'album/' . $music_id.'.jpg';
 			$ret['file_name'] = $filename;
 			if ( !file_exists($filename) )
